@@ -5,5 +5,5 @@ MySQL
 php
 search_string
 se
-golang is a wonderful language
+Golang is a wonderful language
 
