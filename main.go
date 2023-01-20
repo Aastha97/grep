@@ -24,8 +24,8 @@ func main() {
 		finalResult(output, err)
 	case 2:
 		fmt.Println("All inputs done")
-		result, err := searchString(str, strings.Join(inputs, "\r\n"), option)
-		finalResult(strings.Join(result, "\n"), err)
+		result, _ := searchString(str, strings.Join(inputs, "\r\n"), option)
+		finalResult(strings.Join(result, "\n"), nil)
 	case 3:
 		content, err := readFile(fileName)
 		if err != nil {

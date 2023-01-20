@@ -5,49 +5,56 @@ import (
 )
 
 // test function
-var searchStr, fileName string
-var option int
-var output []string
+type CommonVar struct {
+	searchStr string
+	fileName  string
+	option    int
+	output    []string
+	content   string
+	err       error
+	inputs    []string
+}
+
+var commonVar CommonVar
 
 func TestSearchStringFromFileZeroMatch(t *testing.T) {
-
-	searchStr = "golang"
-	option = 1
-	fileName = "grepS2.txt"
-	content, err := readFile(fileName)
-	if err != nil {
-		t.Errorf("Cannot read the file %v, %v", fileName, err)
+	commonVar.searchStr = "golang"
+	commonVar.fileName = "grepS2.txt"
+	commonVar.option = 1
+	commonVar.content, commonVar.err = readFile(commonVar.fileName)
+	if commonVar.err != nil {
+		t.Errorf("Cannot read the file %v, %v", commonVar.fileName, commonVar.err)
 	}
-	output, _ = searchString(searchStr, content, option)
-	if len(output) != 0 {
-		t.Errorf("expected no error, but got the string %v in the file %v", searchStr, fileName)
+	commonVar.output, _ = searchString(commonVar.searchStr, commonVar.content, commonVar.option)
+	if len(commonVar.output) != 0 {
+		t.Errorf("expected no error, but got the string %v in the file %v", commonVar.searchStr, commonVar.fileName)
 	}
 }
 
 func TestSearchStringFromFileOneMatch(t *testing.T) {
-	searchStr = "golang"
-	option = 1
-	fileName = "grepS1.txt"
-	content, err := readFile(fileName)
-	if err != nil {
-		t.Errorf("Cannot read the file %v, %v", fileName, err)
+	commonVar.searchStr = "golang"
+	commonVar.fileName = "grepS1.txt"
+	commonVar.option = 1
+	commonVar.content, commonVar.err = readFile(commonVar.fileName)
+	if commonVar.err != nil {
+		t.Errorf("Cannot read the file %v, %v", commonVar.fileName, commonVar.err)
 	}
-	output, _ = searchString(searchStr, content, option)
-	if len(output) > 1 {
-		t.Errorf("expected no error, but got the string %v in the file %v", searchStr, fileName)
+	commonVar.output, _ = searchString(commonVar.searchStr, commonVar.content, commonVar.option)
+	if len(commonVar.output) > 1 {
+		t.Errorf("expected no error, but got the string %v in the file %v", commonVar.searchStr, commonVar.fileName)
 	}
 }
 
 func TestSearchStringFromFileMoreThenOnceMatch(t *testing.T) {
-	searchStr = "golang"
-	option = 1
-	fileName = "grepS4.txt"
-	content, err := readFile(fileName)
-	if err != nil {
-		t.Errorf("Cannot read the file %v, %v", fileName, err)
+	commonVar.searchStr = "golang"
+	commonVar.fileName = "grepS4.txt"
+	commonVar.option = 1
+	commonVar.content, commonVar.err = readFile(commonVar.fileName)
+	if commonVar.err != nil {
+		t.Errorf("Cannot read the file %v, %v", commonVar.fileName, commonVar.err)
 	}
-	output, _ = searchString(searchStr, content, option)
-	if len(output) < 2 {
-		t.Errorf("expected no error, but got the string %v in the file %v", searchStr, fileName)
+	commonVar.output, _ = searchString(commonVar.searchStr, commonVar.content, commonVar.option)
+	if len(commonVar.output) < 2 {
+		t.Errorf("expected no error, but got the string %v in the file %v", commonVar.searchStr, commonVar.fileName)
 	}
 }
