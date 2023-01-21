@@ -4,6 +4,6 @@ search_string
 MySQL
 php
 search_string
-se
-Golang is a wonderful language
+Golang a wonderfuis language
+go
 

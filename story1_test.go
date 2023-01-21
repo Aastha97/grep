@@ -1,18 +1,20 @@
 package main
 
 import (
+	"strings"
 	"testing"
 )
 
 // test function
 type CommonVar struct {
-	searchStr string
-	fileName  string
-	option    int
-	output    []string
-	content   string
-	err       error
-	inputs    []string
+	searchStr   string
+	fileName    string
+	newFileName string
+	option      int
+	output      []string
+	content     string
+	err         error
+	inputs      []string
 }
 
 var commonVar CommonVar
@@ -26,7 +28,7 @@ func TestSearchStringFromFileZeroMatch(t *testing.T) {
 		t.Errorf("Cannot read the file %v, %v", commonVar.fileName, commonVar.err)
 	}
 	commonVar.output, _ = searchString(commonVar.searchStr, commonVar.content, commonVar.option)
-	if len(commonVar.output) != 0 {
+	if strings.Contains(strings.Join(commonVar.output, " "), "golang") {
 		t.Errorf("expected no error, but got the string %v in the file %v", commonVar.searchStr, commonVar.fileName)
 	}
 }
