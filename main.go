@@ -33,8 +33,6 @@ func main() {
 		}
 		result, _ := searchString(searchStr, content, option)
 		writeFile(result, newFileName)
-		content, err = readFile(newFileName)
-		finalResult(content, err)
 
 	case 4:
 		content, err := readFile(fileName)
@@ -43,8 +41,6 @@ func main() {
 		}
 		result, _ := searchString(searchStr, content, option)
 		writeFile(result, newFileName)
-		content, err = readFile(newFileName)
-		finalResult(content, err)
 
 	case 5:
 		traverseAllfilesInExecDirectory(searchStr, option)
@@ -124,9 +120,7 @@ func takeInputs() (string, int, string, []string, string) {
 		in := bufio.NewReader(os.Stdin)
 
 		for i := 0; i < inputNo; i++ {
-			// fmt.Scan(&inputs[i])
 			inputs[i], _ = in.ReadString('\n')
-			//fmt.Println(inputs[i])
 		}
 	}
 	if option == 3 || option == 4 {
@@ -154,7 +148,8 @@ func traverseAllfilesInExecDirectory(searchStr string, option int) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		searchString(searchStr, content, option)
+		output, _ := searchString(searchStr, content, option)
+		fmt.Println(file.Name() + ":" + strings.Join(output, "\n"))
 	}
 
 }

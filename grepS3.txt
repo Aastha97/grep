@@ -4,6 +4,5 @@ search_string
 MySQL
 php
 search_string
-Golang a wonderfuis language
+Golang a wonderful language
 go
-
