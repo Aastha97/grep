@@ -26,6 +26,7 @@ func searchString(searchStr, content string, isCaseInsensitive, isWordMatch bool
 			matched, _ := regexp.MatchString(caseInsensitivityFlag+wordMatchFlag+searchStr+wordMatchFlag, word)
 			if matched {
 				finalList = append(finalList, str)
+				break
 			}
 
 		}
