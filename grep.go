@@ -4,20 +4,33 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 )
 
-func searchString(searchStr, content string) ([]string, error) {
-	list := strings.Split(content, "\r\n")
+func searchString(searchStr, content string, isCaseInsensitive, isWordMatch bool) []string {
+	var caseInsensitivityFlag string = ""
+	var wordMatchFlag string = ""
 	var finalList []string
+
+	if isCaseInsensitive {
+		caseInsensitivityFlag = "(?i)"
+	}
+	if isWordMatch {
+		wordMatchFlag = "\\b"
+	}
+
+	list := strings.Split(content, "\r\n")
 	for _, str := range list {
 		for _, word := range strings.Fields(str) {
-			if word == searchStr {
+			matched, _ := regexp.MatchString(caseInsensitivityFlag+wordMatchFlag+searchStr+wordMatchFlag, word)
+			if matched {
 				finalList = append(finalList, str)
 			}
+
 		}
 	}
-	return finalList, nil
+	return finalList
 }
 
 func readFile(fileName string) (string, error) {
@@ -46,32 +59,8 @@ func writeFile(newString []string, fileName string) (string, error) {
 
 func finalResult(result string, err error) {
 	if err == nil {
-		fmt.Println(result)
+		fmt.Println("\n" + result)
 	} else {
 		fmt.Println(err)
 	}
 }
-
-// func traverseAllfilesInExecDirectory(searchStr string, option int) {
-// 	exec, err := os.Executable()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	dir := filepath.Dir(exec)
-
-// 	files, err := os.ReadDir(dir)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return
-// 	}
-
-// 	for _, file := range files {
-// 		content, err := readFile(file.Name())
-// 		if err != nil {
-// 			fmt.Println(err)
-// 		}
-// 		output, _ := searchString(searchStr, content)
-// 		fmt.Println(file.Name() + ":" + strings.Join(output, "\n"))
-// 	}
-
-// }

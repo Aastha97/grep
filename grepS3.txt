@@ -1,8 +1,0 @@
-golang
-java
-search_string
-MySQL
-php
-search_string
-Golang a wonderful language
-go

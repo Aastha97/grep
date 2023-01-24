@@ -1,9 +1,0 @@
-golang
-java
-search_string
-MySQL
-golang allows Multithreading
-php
-search_string
-se
-Golang is a wonderful language
