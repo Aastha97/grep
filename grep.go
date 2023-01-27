@@ -22,6 +22,10 @@ func searchString(searchStr, content string, isCaseInsensitive, isWordMatch bool
 
 	list := strings.Split(content, "\r\n")
 	for _, str := range list {
+		if strings.Contains(str, searchStr) {
+			finalList = append(finalList, str)
+			break
+		}
 		for _, word := range strings.Fields(str) {
 			matched, _ := regexp.MatchString(caseInsensitivityFlag+wordMatchFlag+searchStr+wordMatchFlag, word)
 			if matched {

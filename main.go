@@ -15,14 +15,14 @@ func main() {
 	var isWordMatch = flag.Bool("w", false, "Word match when searching")
 	var outputFile = flag.String("o", "", "File to write the matches")
 	flag.Parse()
-
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: grep [option(s)...] pattern [file_name]")
 		return
 	}
+	nonFlagValues := flag.Args()
 	if strings.Contains(os.Args[len(os.Args)-1], ".txt") {
-		searchStr = os.Args[len(os.Args)-2]
-		fileName = os.Args[len(os.Args)-1]
+		searchStr = nonFlagValues[0]
+		fileName = nonFlagValues[1]
 	} else {
 		searchStr = os.Args[len(os.Args)-1]
 	}
