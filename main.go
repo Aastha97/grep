@@ -4,13 +4,13 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 )
 
 func main() {
 	var searchStr, fileName, line, output string
-	var err error
 	var result []string
 	var isCaseInSensitivity = flag.Bool("i", false, "Ignore case when searching")
 	var isWordMatch = flag.Bool("w", false, "Word match when searching")
@@ -45,23 +45,24 @@ func main() {
 			fmt.Println(err)
 		}
 		defer file.Close()
-
 		scanner := bufio.NewScanner(file)
-		if scanner.Scan() {
+		for scanner.Scan() {
 			line = scanner.Text()
 			output = searchString(searchStr, line, *isCaseInSensitivity, *isWordMatch)
-			result = append(result, output)
+			if output != "" {
+				result = append(result, output)
+			}
+
 		}
 		if err := scanner.Err(); err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 		}
-		result = append(result, line)
 	}
 
-	if *outputFile != "" {
+	if outputFile != nil {
 		writeFile(result, *outputFile)
 	} else {
-		finalResult(strings.Join(result, "\n"), err)
+		finalResult(strings.Join(result, "\n"))
 	}
 
 }

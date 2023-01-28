@@ -68,10 +68,6 @@ func writeFile(newString []string, fileName string) (string, error) {
 // 	return line, nil
 // }
 
-func finalResult(result string, err error) {
-	if err == nil {
-		fmt.Println("\n" + result)
-	} else {
-		fmt.Println(err)
-	}
+func finalResult(result string) {
+	fmt.Println("\n" + result)
 }
