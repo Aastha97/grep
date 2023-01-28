@@ -9,8 +9,9 @@ import (
 )
 
 func main() {
-	var searchStr, fileName, content string
+	var searchStr, fileName, line, output string
 	var err error
+	var result []string
 	var isCaseInSensitivity = flag.Bool("i", false, "Ignore case when searching")
 	var isWordMatch = flag.Bool("w", false, "Word match when searching")
 	var outputFile = flag.String("o", "", "File to write the matches")
@@ -28,30 +29,39 @@ func main() {
 	}
 
 	if fileName == "" {
-		var inputNo int
-		fmt.Println("Enter the number of inputs")
-		fmt.Scanln(&inputNo)
-		fmt.Println("Enter string in different line: ")
-		inputs := make([]string, inputNo)
-		in := bufio.NewReader(os.Stdin)
-
-		for i := 0; i < inputNo; i++ {
-			inputs[i], _ = in.ReadString('\n')
+		scanner := bufio.NewScanner(os.Stdin)
+		for {
+			if scanner.Scan() {
+				line = scanner.Text()
+			}
+			output = searchString(searchStr, line, *isCaseInSensitivity, *isWordMatch)
+			if output != "" {
+				fmt.Println(output + "\n")
+			}
 		}
-		content = strings.Join(inputs, "\r\n")
 	} else {
-		content, err = readFile(fileName)
+		file, err := os.Open(fileName)
 		if err != nil {
-			fmt.Println("Error reading file:", err)
-			return
+			fmt.Println(err)
 		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		if scanner.Scan() {
+			line = scanner.Text()
+			output = searchString(searchStr, line, *isCaseInSensitivity, *isWordMatch)
+			result = append(result, output)
+		}
+		if err := scanner.Err(); err != nil {
+			fmt.Println(err)
+		}
+		result = append(result, line)
 	}
 
-	output := searchString(searchStr, content, *isCaseInSensitivity, *isWordMatch)
 	if *outputFile != "" {
-		writeFile(output, *outputFile)
+		writeFile(result, *outputFile)
 	} else {
-		finalResult(strings.Join(output, "\n"), err)
+		finalResult(strings.Join(result, "\n"), err)
 	}
 
 }

@@ -5,13 +5,10 @@ import (
 	"fmt"
 	"os"
 	"regexp"
-	"strings"
 )
 
-func searchString(searchStr, content string, isCaseInsensitive, isWordMatch bool) []string {
-	var caseInsensitivityFlag string = ""
-	var wordMatchFlag string = ""
-	var finalList []string
+func searchString(searchStr, line string, isCaseInsensitive, isWordMatch bool) string {
+	var caseInsensitivityFlag, wordMatchFlag, output string = "", "", ""
 
 	if isCaseInsensitive {
 		caseInsensitivityFlag = "(?i)"
@@ -20,32 +17,22 @@ func searchString(searchStr, content string, isCaseInsensitive, isWordMatch bool
 		wordMatchFlag = "\\b"
 	}
 
-	list := strings.Split(content, "\r\n")
-	for _, str := range list {
-		if strings.Contains(str, searchStr) {
-			finalList = append(finalList, str)
-			break
-		}
-		for _, word := range strings.Fields(str) {
-			matched, _ := regexp.MatchString(caseInsensitivityFlag+wordMatchFlag+searchStr+wordMatchFlag, word)
-			if matched {
-				finalList = append(finalList, str)
-				break
-			}
-
-		}
+	matched, _ := regexp.MatchString(caseInsensitivityFlag+wordMatchFlag+searchStr+wordMatchFlag, line)
+	if matched {
+		output = line
 	}
-	return finalList
+
+	return output
 }
 
-func readFile(fileName string) (string, error) {
-	data, err := os.ReadFile(fileName)
-	if err != nil {
-		return "Error reading file", err
-	}
-	content := string(data)
-	return content, err
-}
+// func readFile(fileName string) (string, error) {
+// 	data, err := os.ReadFile(fileName)
+// 	if err != nil {
+// 		return "Error reading file", err
+// 	}
+// 	content := string(data)
+// 	return content, err
+// }
 
 func writeFile(newString []string, fileName string) (string, error) {
 	content, err := os.Open(fileName)
@@ -61,6 +48,25 @@ func writeFile(newString []string, fileName string) (string, error) {
 	defer content.Close()
 	return warning, err
 }
+
+// func readFileLineByLine(fileName string) (string, error) {
+// 	var line string
+// 	file, err := os.Open(fileName)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return "", err
+// 	}
+// 	defer file.Close()
+
+// 	scanner := bufio.NewScanner(file)
+// 	if scanner.Scan() {
+// 		line = scanner.Text()
+// 	}
+// 	if err := scanner.Err(); err != nil {
+// 		return "", err
+// 	}
+// 	return line, nil
+// }
 
 func finalResult(result string, err error) {
 	if err == nil {
