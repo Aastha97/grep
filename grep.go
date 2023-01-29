@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 func searchString(searchStr, line string, isCaseInsensitive, isWordMatch bool) string {
@@ -50,19 +51,13 @@ func traverseDir(dirName string) []string {
 	}
 	return files
 }
-
-// func readFile(fileName string) (string, error) {
-// 	data, err := os.ReadFile(fileName)
-// 	if err != nil {
-// 		return "Error reading file", err
-// 	}
-// 	content := string(data)
-// 	return content, err
-// }
-
 func writeFile(newString []string, fileName string) (string, error) {
+	var warning string = "\n" + fileName + " file already exists, cannot write in file"
 	content, err := os.Open(fileName)
-	var warning string = fileName + " file already exists"
+	if err == nil {
+		fmt.Println(warning)
+		return warning, err
+	}
 	if err != nil {
 		content, _ := os.Create(fileName)
 		for _, searchStr := range newString {
@@ -75,25 +70,42 @@ func writeFile(newString []string, fileName string) (string, error) {
 	return warning, err
 }
 
-// func readFileLineByLine(fileName string) (string, error) {
-// 	var line string
-// 	file, err := os.Open(fileName)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return "", err
-// 	}
-// 	defer file.Close()
+func readFileLineByLine(fileName, searchStr string, isCaseInSensitivity, isWordMatch, recursive bool) []string {
+	var result []string
+	file, err := os.Open(fileName)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		output := searchString(searchStr, line, isCaseInSensitivity, isWordMatch)
+		if output != "" {
+			if recursive {
+				result = append(result, fileName+": "+output)
+			} else {
+				result = append(result, output)
+			}
 
-// 	scanner := bufio.NewScanner(file)
-// 	if scanner.Scan() {
-// 		line = scanner.Text()
-// 	}
-// 	if err := scanner.Err(); err != nil {
-// 		return "", err
-// 	}
-// 	return line, nil
-// }
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+	return result
+}
 
 func finalResult(result string) {
 	fmt.Println("\n" + result)
+}
+
+func recursiveCallFromDir(dirName, searchStr string, isCaseInSensitivity, isWordMatch, recursive bool) []string {
+	var result []string
+	files := traverseDir(dirName)
+	for _, fileName := range files {
+		result := readFileLineByLine(fileName, searchStr, isCaseInSensitivity, isWordMatch, recursive)
+		finalResult(strings.Join(result, "\n"))
+	}
+	return result
 }
