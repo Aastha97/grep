@@ -101,11 +101,12 @@ func finalResult(result string) {
 }
 
 func recursiveCallFromDir(dirName, searchStr string, isCaseInSensitivity, isWordMatch, recursive bool) []string {
-	var result []string
+	var result, finalList []string
 	files := traverseDir(dirName)
 	for _, fileName := range files {
-		result := readFileLineByLine(fileName, searchStr, isCaseInSensitivity, isWordMatch, recursive)
+		result = readFileLineByLine(fileName, searchStr, isCaseInSensitivity, isWordMatch, recursive)
 		finalResult(strings.Join(result, "\n"))
+		finalList = append(finalList, strings.Join(result, "\n"))
 	}
-	return result
+	return finalList
 }
