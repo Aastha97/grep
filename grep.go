@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 )
 
@@ -23,6 +25,30 @@ func searchString(searchStr, line string, isCaseInsensitive, isWordMatch bool) s
 	}
 
 	return output
+}
+
+func traverseDir(dirName string) []string {
+	var files []string
+
+	err := filepath.Walk(dirName, func(path string, info os.FileInfo, err error) error {
+
+		if err != nil {
+
+			fmt.Println(err)
+			return nil
+		}
+
+		if !info.IsDir() && filepath.Ext(path) == ".txt" {
+			files = append(files, path)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return files
 }
 
 // func readFile(fileName string) (string, error) {
