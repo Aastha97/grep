@@ -32,20 +32,16 @@ func traverseDir(dirName string) []string {
 	var files []string
 
 	err := filepath.Walk(dirName, func(path string, info os.FileInfo, err error) error {
-
 		if err != nil {
 
 			fmt.Println(err)
 			return nil
 		}
-
 		if !info.IsDir() && filepath.Ext(path) == ".txt" {
 			files = append(files, path)
 		}
-
 		return nil
 	})
-
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,11 +66,11 @@ func writeFile(newString []string, fileName string) (string, error) {
 	return warning, err
 }
 
-func readFileLineByLine(fileName, searchStr string, isCaseInSensitivity, isWordMatch, recursive bool) []string {
+func readFileLineByLine(fileName, searchStr string, isCaseInSensitivity, isWordMatch, recursive bool) ([]string, error) {
 	var result []string
 	file, err := os.Open(fileName)
 	if err != nil {
-		fmt.Println(err)
+		return result, err
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -87,26 +83,30 @@ func readFileLineByLine(fileName, searchStr string, isCaseInSensitivity, isWordM
 			} else {
 				result = append(result, output)
 			}
-
 		}
 	}
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
-	return result
+	return result, err
 }
 
-func finalResult(result string) {
-	fmt.Println("\n" + result)
+func finalResult(result string, err error) {
+	if err != nil {
+		fmt.Println("\n" + result)
+	} else {
+		fmt.Println("\n" + result)
+	}
 }
 
-func recursiveCallFromDir(dirName, searchStr string, isCaseInSensitivity, isWordMatch, recursive bool) []string {
+func recursiveCallFromDir(dirName, searchStr string, isCaseInSensitivity, isWordMatch, recursive bool) ([]string, error) {
 	var result, finalList []string
+	var err error
 	files := traverseDir(dirName)
 	for _, fileName := range files {
-		result = readFileLineByLine(fileName, searchStr, isCaseInSensitivity, isWordMatch, recursive)
-		finalResult(strings.Join(result, "\n"))
+		result, err = readFileLineByLine(fileName, searchStr, isCaseInSensitivity, isWordMatch, recursive)
+		finalResult(strings.Join(result, "\n"), err)
 		finalList = append(finalList, strings.Join(result, "\n"))
 	}
-	return finalList
+	return finalList, err
 }

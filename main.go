@@ -29,7 +29,7 @@ func main() {
 			if err != nil {
 				fmt.Println(err)
 			}
-			result = recursiveCallFromDir(dirName, searchStr, *isCaseInSensitivity, *isWordMatch, *recursive)
+			result, _ = recursiveCallFromDir(dirName, searchStr, *isCaseInSensitivity, *isWordMatch, *recursive)
 		} else {
 			scanner := bufio.NewScanner(os.Stdin)
 			for scanner.Scan() {
@@ -49,11 +49,11 @@ func main() {
 			if err != nil {
 				fmt.Println(err)
 			}
-			result = recursiveCallFromDir(dirName, searchStr, *isCaseInSensitivity, *isWordMatch, *recursive)
+			result, _ = recursiveCallFromDir(dirName, searchStr, *isCaseInSensitivity, *isWordMatch, *recursive)
 		} else {
 			fileName = nonFlagValues[1]
-			result = readFileLineByLine(fileName, searchStr, *isCaseInSensitivity, *isWordMatch, *recursive)
-			finalResult(strings.Join(result, "\n"))
+			result, err = readFileLineByLine(fileName, searchStr, *isCaseInSensitivity, *isWordMatch, *recursive)
+			finalResult(strings.Join(result, "\n"), err)
 		}
 		if *outputFile != "" {
 			writeFile(result, *outputFile)
